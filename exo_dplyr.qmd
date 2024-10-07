@@ -29,7 +29,6 @@ print(dim(bank))
 
 ### Question 3: 
 ```{r}
-summarise(bank, sd(balance))
 ```
 You have to tell which column and which type of summary you want. 
 
