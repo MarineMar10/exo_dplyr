@@ -29,8 +29,10 @@ print(dim(bank))
 
 ### Question 3: 
 ```{r}
+bank %>% summary()
 ```
 You have to tell which column and which type of summary you want. 
+
 
 ## Exercise 2
 
@@ -38,6 +40,7 @@ You have to tell which column and which type of summary you want.
 ```{r}
 bank %>% filter(age>50)
 ```
+
 ### Question 2: 
 ```{r}
 bank %>% filter(marital== "married" & education== "secondary")
@@ -45,6 +48,23 @@ bank %>% filter(marital== "married" & education== "secondary")
 ### Question 3:
 ```{r}
 summarise(bank %>% filter(age<25 & marital=="single" & education=="tertiary"), sd(age))
+bank %>% filter(age<25 & marital=="single" & education=="tertiary")%>% summary()
 ```
+## Exercise 3:
 
+### Question 1: 
+```{r}
+bank %>% select(age) %>% summary()
+bank %>% pull(age) %>% summary()
+```
+One is in vertical the other in horizontal. 
+
+### Question 2:
+```{r}
+bank %>% select(where(is.numeric)) %>% summary()
+```
+### Question 3: 
+```{r}
+summarise(bank, median(age))
+```
 
