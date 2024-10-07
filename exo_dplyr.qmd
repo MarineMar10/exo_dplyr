@@ -32,3 +32,20 @@ print(dim(bank))
 summarise(bank, sd(balance))
 ```
 You have to tell which column and which type of summary you want. 
+
+## Exercise 2
+
+### Question 1: 
+```{r}
+bank %>% filter(age>50)
+```
+### Question 2: 
+```{r}
+bank %>% filter(marital== "married" & education== "secondary")
+```
+### Question 3:
+```{r}
+summarise(bank %>% filter(age<25 & marital=="single" & education=="tertiary"), sd(age))
+```
+
+
