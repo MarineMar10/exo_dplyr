@@ -1,0 +1,34 @@
+---
+title: "dplyr_exo"
+author: "Marine"
+format: html
+---
+```{r}
+#| message: false
+here::i_am("exo_dplyr.Rproj")
+library(here)
+library(vroom)
+library(ggplot2)
+library(dplyr)
+```
+
+## Exercice 1:
+
+```{r}
+bank<- vroom(here("Data","bank-full.csv"))
+```
+
+### Question 1: 
+```{r}
+print(colnames(bank))
+```
+### Question 2: 
+```{r}
+print(dim(bank))
+```
+
+### Question 3: 
+```{r}
+summarise(bank, sd(balance))
+```
+You have to tell which column and which type of summary you want. 
