@@ -85,4 +85,24 @@ life <-
   mutate(reladiff= diff/`Both sexes`) 
 ```
 
+## Exercise 5: 
+
+### Question 1: 
+```{r}
+life <-
+  life |>
+  mutate(X= Female- median(Female)) 
+```
+
+### Question 2: 
+```{r}
+life <-
+  life |>
+  mutate(Y= Male- (mean(Male)/sd(Male)))
+```
+
+### Question 3: 
+```{r}
+life %>% mutate(Atypical= if_else(`Both sexes`>(median(`Both sexes`)+2*sd(`Both sexes`))|`Both sexes`<(median(`Both sexes`)-2*sd(`Both sexes`)), TRUE, FALSE ))
+```
 
