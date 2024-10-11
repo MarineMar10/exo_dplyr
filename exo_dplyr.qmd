@@ -47,7 +47,6 @@ bank %>% filter(marital== "married" & education== "secondary")
 ```
 ### Question 3:
 ```{r}
-summarise(bank %>% filter(age<25 & marital=="single" & education=="tertiary"), sd(age))
 bank %>% filter(age<25 & marital=="single" & education=="tertiary")%>% summary()
 ```
 ## Exercise 3:
@@ -67,4 +66,23 @@ bank %>% select(where(is.numeric)) %>% summary()
 ```{r}
 summarise(bank, median(age))
 ```
+
+## Exercise 4 
+```{r}
+life<- vroom(here("Data","life-expectancy-at-birth-who.csv"))
+```
+### Question 1: 
+```{r}
+life <-
+  life |>
+  mutate(diff= Male-Female) 
+```
+
+### Question 2:
+```{r}
+life <-
+  life |>
+  mutate(reladiff= diff/`Both sexes`) 
+```
+
 
