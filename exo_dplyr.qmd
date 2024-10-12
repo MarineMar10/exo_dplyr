@@ -103,7 +103,6 @@ life <-
 
 ### Question 3: 
 ```{r}
-life %>% mutate(Atypical= if_else(`Both sexes`>(median(`Both sexes`)+2*sd(`Both sexes`))|`Both sexes`<(median(`Both sexes`)-2*sd(`Both sexes`)), TRUE, FALSE ))
 life %>% 
   filter(Year ==2019)%>%
   mutate(Atypical= if_else(`Both sexes`>(median(`Both sexes`)+2*sd(`Both sexes`))|`Both sexes`<(median(`Both sexes`)-2*sd(`Both sexes`)), TRUE, FALSE ))
@@ -119,5 +118,26 @@ bank %>% summarise(mean(age), median(age))
 life %>%
   filter(Year==2015)%>%
   summarise(max(Male), min(Male), max(Female), min(Female))
+```
+## Exercice 7: 
+
+### Question 1: 
+```{r}
+bank %>% group_by(marital) %>% summarise(median(age))
+```
+### Question 2: 
+```{r}
+bank %>% group_by(job) %>% summarise(count=n())
+```
+### Question 3: 
+```{r}
+life %>% group_by(Year) %>% summarise(mean(Female), min(Female), max(Female))
+```
+### Question 4: 
+```{r}
+Country <- life %>%
+mutate(countries=
+       (`Both sexes`<(mean(`Both sexes`)-2*sd(`Both sexes`))))
+life %>% group_by(Country)
 ```
 
