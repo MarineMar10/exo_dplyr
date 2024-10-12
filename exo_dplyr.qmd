@@ -135,9 +135,22 @@ life %>% group_by(Year) %>% summarise(mean(Female), min(Female), max(Female))
 ```
 ### Question 4: 
 ```{r}
-Country <- life %>%
-mutate(countries=
+life %>% mutate(countries=
        (`Both sexes`<(mean(`Both sexes`)-2*sd(`Both sexes`))))
 life %>% group_by(Country)
+```
+
+## Exercice 8:
+
+### Question 1: 
+```{r}
+bank %>% group_by(education) %>% summarise(sum(marital == "married")/n()*100)
+```
+
+### Question 2: 
+Compute the percentage of persons with a credit default (“yes” in the default variable)
+within the groups defined by the status on the housing and loan variables.
+```{r}
+bank %>% group_by(loan, housing) %>% summarise((sum(default=="yes")/n())*100)
 ```
 
