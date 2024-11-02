@@ -161,8 +161,41 @@ life|>
 ## Exercise 8: 
 ###Question 1 Compute the percentage of married people in each education level in the bank data set.
 ```{r}
-
+bank|>
+  group_by(education)|>
+  summarise(nm= sum(marital== "married"),
+            n= n(),
+            perc= (nm/n)*100)
 ```
 
 ###Question 2 Compute the percentage of persons with a credit default (“yes” in the default variable) within the groups defined by the status on the housing and loan variables.
+```{r}
+bank|>
+  group_by(housing, loan)|>
+  summarise(nm= sum(default== "yes"),
+            n= n(),
+            perc= (nm/n)*100)
+```
 
+## Exercise 9: 
+### Question 1 Extract from the Life expectancy at birth data a sub table of countries for which the median life expectancy of men was strictly larger than 75 for the time period. We want the full data of those countries, even the years for which the life expectancy of male is lower than 75 (if they exists).
+```{r}
+life |>
+  group_by(Country)|>
+  filter(median(Male)>75)
+```
+
+### Question 2 Extract from the bank data set the sub table of clients whore are older than ten years plus the median age of their group, where the groups are defined by marital status and education level.
+```{r}
+bank |>
+  group_by(marital, education)|>
+  filter(age>median(age)+10)
+```
+
+## Exercise 10: 
+###Question 1 Transform the Life expectancy at birth data in such as way that each country is only described by a single row of the result table.
+```{r}
+
+```
+
+###Question 2 In the bank data set, compute the number of persons in groups of identical job and marital status, and arrange the results as in Table
