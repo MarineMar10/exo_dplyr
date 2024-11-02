@@ -1,0 +1,168 @@
+---
+title: "dplyr exos redo"
+author: "Marmar"
+format: html
+---
+```{r}
+library(here)
+library(vroom)
+library(dplyr)
+library(tidyr)
+here::i_am("exo_dplyr.Rproj")
+bank<- vroom(here("Data","bank-full.csv"))
+```
+##Exercise 1
+###Question 1 Print the names of the variables of the Bank data set.
+```{r}
+print(colnames(bank))
+```
+
+###Question 2 Print the dimensions of the data table.
+```{r}
+print(dim(bank))
+```
+
+###Question 3 Print a summary of the data table, using the standard summary function. What are the limitations, if any, of this summary?
+```{r}
+bank|>
+summary()
+```
+## Exercise 2: 
+###Question 1 Extract clients of the bank that are at least 50 years old.
+```{r}
+bank |>
+  filter(age>=50)
+```
+
+###Question 2 Print the number of clients who are married and have a secondary level of education.
+```{r}
+bank |>
+  filter(marital =="married" &
+           education == "secondary")|>
+  summarise(n=n())
+```
+
+
+###Question 3 Print the summary of the subset of clients that are at most 25 and are single or have a tertiary level of education.
+```{r}
+bank|>
+  filter(age<=25,
+         marital == "single" | education == "tertiary")|>
+  summary()
+```
+## Exercise 3: 
+###Question 1 Compare the result of
+```{r}
+bank %>% select(age) %>% summary()
+bank %>% pull(age) %>% summary()
+```
+
+###Question 2 Print a summary of the bank data including only numerical variables.
+```{r}
+bank|>
+  select(where(\(x) is.numeric(x)))|>
+  summary()
+```
+
+###Question 3 Print the median age of the married clients
+```{r}
+bank|>
+  filter(marital=="married")|>
+  summarise(median(age))
+```
+
+## Exercise 4: 
+###Question 1 Compute a new variable with the difference between the life expectancy of men and women.
+```{r}
+life <- vroom(here("Data", "life-expectancy-at-birth-who.csv"))
+```
+```{r}
+life|>
+  mutate(diff = Male-Female)
+```
+
+###Question 2 Compute a new variable with the relative difference between the life expectancy of men and women, that is the difference divided by the life expectancy for both sexes.
+```{r}
+life|>
+  mutate(rela_diff = (Male-Female)/`Both sexes`)
+```
+## Exercise 5: 
+### Question 1 Compute a new variable with the difference between the life expectancy of women and the median life expectancy of women in the whole data frame.
+```{r}
+life |>
+  mutate(fem= Female- median(Female))
+```
+
+### Question 2 Compute a new variable with the difference between the life expectancy of men and the mean life expectancy of men in the whole data frame, normalised by its standard deviation.
+```{r}
+life |>
+  mutate(mal= (Male- mean(Male))/sd(Male))
+```
+
+
+###Question 3 Compute a boolean variable that is TRUE if the country (for a given year) is atypical with respect to the life expectancy (using the Both sexes column. This is the case if the life expectancy is larger than the median value plus twice the standard deviation or if it is small than the median value minus twice the standard deviation.
+```{r}
+life |>
+  mutate(atypical = case_when(
+    `Both sexes` > (median(`Both sexes`) + 2 * sd(`Both sexes`)) ~ TRUE,
+    `Both sexes` > (median(`Both sexes`) - 2 * sd(`Both sexes`)) ~ TRUE,
+    .default = FALSE
+  ))
+```
+
+
+## Exercise 6:
+###Question 1 Using the summarise verb, compute the mean and median age of clients in the bank data set.
+```{r}
+bank |>
+  summarise(mean(age), median(age))
+```
+
+### Question 2 Using the summarise verb, compute the highest and the lowest life expectancy for each sex for the year 2015 (using the life expectancy at birth data set).
+```{r}
+life |>
+  filter(Year == 2015) |>
+  summarise(min(Male), max(Male), min(Female), max(Female))
+```
+## Exercise 7: 
+### Question 1 Compute the median age of the clients in the bank data set as a function of their marital status.
+```{r}
+bank |>
+  group_by(marital)|>
+  summarise(median(age))|>
+  ungroup()
+```
+
+### Question 2 Compute the number of clients for each of the professions (job variable) in the bank data set.
+```{r}
+bank |>
+  group_by(job)|>
+  summarise(number=n())|>
+  ungroup()
+```
+
+### Question 3 Compute the median, minimum and maximum life expectancy for women as a function of the year.
+```{r}
+life|>
+  group_by(Year)|>
+  summarise(median(Female), min(Female), max(Female))|>
+  ungroup()
+```
+
+### Question 4 Find the countries that have an average life expectancy for both sexes over the time period that is smaller than the mean life expectancy minus two times its standard deviation.
+```{r}
+life|>
+   mutate(c = case_when(
+    `Both sexes` < (mean(`Both sexes`) - 2 * sd(`Both sexes`)) ~ TRUE,
+    .default = FALSE))|>
+  filter(c== TRUE)
+```
+
+## Exercise 8: 
+###Question 1 Compute the percentage of married people in each education level in the bank data set.
+```{r}
+
+```
+
+###Question 2 Compute the percentage of persons with a credit default (“yes” in the default variable) within the groups defined by the status on the housing and loan variables.
+

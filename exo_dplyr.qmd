@@ -21,6 +21,8 @@ bank<- vroom(here("Data","bank-full.csv"))
 ### Question 1: 
 ```{r}
 print(colnames(bank))
+## Or
+print(names(bank))
 ```
 ### Question 2: 
 ```{r}
@@ -43,11 +45,15 @@ bank %>% filter(age>50)
 
 ### Question 2: 
 ```{r}
-bank %>% filter(marital== "married" & education== "secondary")
+bank %>% filter(marital== "married" & education== "secondary") ## ca print juste le tableau. 
+bank %>% filter(marital== "married" & education== "secondary")|> nrow() |> print()
 ```
 ### Question 3:
 ```{r}
-bank %>% filter(age<25 & marital=="single" & education=="tertiary")%>% summary()
+bank %>% filter(age<=25 & marital=="single" & education=="tertiary")%>% summary()
+## Dans la consigne c'est single or have tertiary pas et. 
+
+bank %>% filter(age<=25 & marital=="single" |  education=="tertiary")%>% summary()
 ```
 ## Exercise 3:
 
@@ -64,7 +70,9 @@ bank %>% select(where(is.numeric)) %>% summary()
 ```
 ### Question 3: 
 ```{r}
-summarise(bank, median(age))
+summarise(bank, median(age)) 
+## Il fallait faire ca pour les married clients. 
+bank |> filter(marital=="married") |> pull(age) |> median() |> print()
 ```
 
 ## Exercise 4 
@@ -98,7 +106,7 @@ life <-
 ```{r}
 life <-
   life |>
-  mutate(Y= Male- (mean(Male)/sd(Male)))
+  mutate(Y= (Male- (mean(Male)))/sd(Male))
 ```
 
 ### Question 3: 
@@ -131,7 +139,7 @@ bank %>% group_by(job) %>% summarise(count=n())
 ```
 ### Question 3: 
 ```{r}
-life %>% group_by(Year) %>% summarise(mean(Female), min(Female), max(Female))
+life %>% group_by(Year) %>% summarise(median(Female), min(Female), max(Female))
 ```
 ### Question 4: 
 ```{r}
@@ -153,4 +161,51 @@ within the groups defined by the status on the housing and loan variables.
 ```{r}
 bank %>% group_by(loan, housing) %>% summarise((sum(default=="yes")/n())*100)
 ```
+
+## Exercice 9: 
+
+### Question 1: 
+```{r}
+sub_table <-life %>% group_by(Country)%>% filter(median(Male)>75)
+print(sub_table)
+```
+### Question 2: Extract from the bank data set the sub table of clients who are older than ten years plus the median age of their group, where the groups are defined by marital status and education level.
+
+```{r}
+sub_table2 <- bank %>% group_by(marital, education) %>% filter(age>10+median(age))
+print(sub_table2)
+```
+
+## Exercise 10 (Pivoting)
+
+### Question 1 Transform the Life expectancy at birth data in such as way that each country is only described by a single row of the result table.
+```{r}
+library(tidyr)
+life |> pivot_wider(names_from=Year,
+                    values_from=c(Male,Female,`Both sexes`))
+```
+
+### Question 2 In the bank data set, compute the number of persons in groups of identical job and marital status, and arrange the results as in Table 3.
+
+```{r}
+bank |> group_by(marital, job) |> summarise(n= n()) |> ungroup()|>
+  pivot_wider(names_from=marital, 
+              values_from= n)
+```
+```{r}
+bank |> group_by(job, marital) |> summarise(n=n()) |> ungroup() |>
+pivot_wider(names_from=marital,values_from=n)
+
+```
+## Exercise 11:
+```{r}
+credit<- vroom(here("Data","default-of-credit-card-clients.csv"))
+```
+
+### Question 1 Split the data set into data that describe each person and data related to payment. This should produce four tables, with only ID as a common variables: 1. a table with the personal data such as the education level and the target variable default payment next month; 2. a table with the repayment status (columns starting with PAY and not with PAY_AMT); 3. a table with the bill status (columns starting with BILL_AMT); 4. a table with the payment status (columns starting with PAY_AMT).
+
+```{r}
+
+```
+
 
